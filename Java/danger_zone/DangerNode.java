@@ -342,8 +342,8 @@ public class DangerNode{
 		final DangerNode searchNode = new DangerNode(searchTuple[0],searchTuple[1],-1);
 		float currentBest = treeStack.peek().sqDistance(searchNode);
 		bests.push(treeStack.peek());
-		while(depth != 0){
-			if(treeStack.peek() != null){
+		while(depth > 0){
+			if(!treeStack.empty()){
 				curNode = treeStack.pop();	
 			}else{
 				//We have no more tree to search so just return
