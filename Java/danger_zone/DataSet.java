@@ -176,6 +176,9 @@ public class DataSet{
 		return dataset.size();
 	}
 
+	/**
+	*Closes the connection to the database
+	*/
 	public void close(){
 		try{ 
 			con.close();

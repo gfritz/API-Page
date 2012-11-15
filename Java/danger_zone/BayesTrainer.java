@@ -194,6 +194,9 @@ public class BayesTrainer{
 
 	}
 
+	/**
+	*Closes the connection to the DataSet
+	*/
 	public void close(){
 		data.close();
 	}
