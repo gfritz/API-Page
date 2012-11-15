@@ -74,20 +74,21 @@ public class DataSet{
 	*/
 	public boolean sendTrainingData(int cat, String text){
 		//This function sends to test.online_training table;
-		boolean opened = false;
 		try {
+			//Get connection (connection is closed by this point)
 			con = openConnection(password);
-			if(con==null){
-				con = openConnection(password);
-				opened = true;
-			}
-			Statement query = con.createStatement();
-			String statement = "insert into online_training  (cat, traintext) values ( " + cat + ", \"" + text + "\");";
-			query.executeUpdate(statement);
+			
+			PreparedStatement query = con.prepareStatement("insert into online_training  (cat, traintext) values (?,?);");
+			query.setInt(1,cat);
+			query.setString(2,text);
+			System.out.println("CAT: " + cat);
+			System.out.println("TEXT: " + text);
+			query.executeUpdate();
 			query.close();
-			if(opened){
-				con.close();
-			}
+			
+			//Close
+			con.close();
+			
 		}catch(SQLException s){
 			System.out.println("Error adding training data to online_training"  );
 			System.out.println("SQLException: " + s.getMessage());
