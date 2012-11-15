@@ -194,13 +194,14 @@ public class DangerControlUDP  extends DangerControl{
 			if(line.indexOf(CommandParser.CMD_LON) != -1 && line.indexOf(CommandParser.CMD_LAT) != -1){
 				//Handle the command and respond to it
 				try{ 
-					Stack<DangerNode> temp = this.handleGeoCommand(line);
+					System.out.println(dangerZones);
+					Stack<DangerNode> temp = this.handleGeoCommand(line.trim());
 					System.out.println(temp);
 					this.dispatchResponse(temp,request);
 				}catch(Exception e){
 					System.out.println("Error handling Geo Command: '"  + line + "' is not properly formed");
 					System.out.println("Exception: " + e.getMessage());
-					System.out.println("TracE: " + e.getCause());
+					System.out.println("TracE: " + e.toString());
 				}
 				//Force the stream to spit back to the client
 			}else if(line.trim().equals(CommandParser.KILL)){
@@ -321,7 +322,6 @@ public class DangerControlUDP  extends DangerControl{
 				System.out.println("No Tree Initailized");
 				return null;
 			}
-			System.out.println("ARRAY " + geoCmd);
 			return dangerZones.nearestNeighbor(new float[]{geoCmd[0],geoCmd[1]},(int)geoCmd[2]);
 
 		}
