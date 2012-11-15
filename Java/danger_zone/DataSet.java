@@ -72,7 +72,7 @@ public class DataSet{
 	*@param cat category used by the bayes that the text belongs to
 	*@param text the string that is used in training the bayes.
 	*/
-	public void sendTrainingData(int cat, String text){
+	public boolean sendTrainingData(int cat, String text){
 		//This function sends to test.online_training table;
 		boolean opened = false;
 		try {
@@ -90,11 +90,14 @@ public class DataSet{
 		}catch(SQLException s){
 			System.out.println("Error adding training data to online_training"  );
 			System.out.println("SQLException: " + s.getMessage());
+			return false;
 		}catch(Exception e){
 			System.out.println("Error connecting to the database");
 			System.out.println("Exception: " + e.getMessage());
+			return false;
 		}
 		System.out.println("Trainined on " + text);
+		return true;
 		
 	}	
 

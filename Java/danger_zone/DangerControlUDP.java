@@ -224,12 +224,13 @@ public class DangerControlUDP  extends DangerControl{
 				//Train the data.
 				String [] parsed = CommandParser.parseTrainCommand(line);
 				//First element is category
+				boolean commited = false;
 				if(parsed[0].equals(CommandParser.OPT_DANGER)){
-					classifier.trainOnText(parsed[1],NaiveBayes.CAT_DANGER);
+					commited = classifier.trainOnText(parsed[1],NaiveBayes.CAT_DANGER);
 				}else if(parsed[0].equals(CommandParser.OPT_SAFE)){
-					classifier.trainOnText(parsed[1],NaiveBayes.CAT_SAFE);
+					commited = classifier.trainOnText(parsed[1],NaiveBayes.CAT_SAFE);
 				}
-				this.dispatchTrainResponse();
+				this.dispatchTrainResponse(commited, request);;
 			}
 			//We can extend right here to implement more commands
 	}
