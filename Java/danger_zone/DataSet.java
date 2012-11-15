@@ -177,7 +177,6 @@ public class DataSet{
 	public void close(){
 		try{ 
 			con.close();
-			con = null;
 		}catch(SQLException sql){
 			System.out.println("Problem closing the connection to the database");
 		}
