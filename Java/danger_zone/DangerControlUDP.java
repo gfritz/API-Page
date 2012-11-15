@@ -231,9 +231,9 @@ public class DangerControlUDP  extends DangerControl{
 				//First element is category
 				boolean commited = false;
 				if(parsed[0].equals(CommandParser.OPT_DANGER)){
-					commited = classifier.trainOnText(parsed[1],NaiveBayes.CAT_DANGER);
+					commited = classifier.trainOnText(parsed[1].trim(),NaiveBayes.CAT_DANGER);
 				}else if(parsed[0].equals(CommandParser.OPT_SAFE)){
-					commited = classifier.trainOnText(parsed[1],NaiveBayes.CAT_SAFE);
+					commited = classifier.trainOnText(parsed[1].trim(),NaiveBayes.CAT_SAFE);
 				}else{
 					System.out.println("Unknown category");
 				}

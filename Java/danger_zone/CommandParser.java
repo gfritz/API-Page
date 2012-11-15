@@ -146,7 +146,7 @@ public class CommandParser{
 				if(parts[1].equals(OPT_DANGER) || parts[1].equals(OPT_SAFE)){
 					String build = "";
 					for(int i = 2; i < parts.length; i++){
-						build += parts[i];
+						build += " " + parts[i].trim();
 					}
 					elements[0] = parts[1];
 					elements[1] = build;
