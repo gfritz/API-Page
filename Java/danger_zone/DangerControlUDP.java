@@ -220,6 +220,16 @@ public class DangerControlUDP  extends DangerControl{
 					System.out.println("Error handling Classification Command: \"" + line + "\" is not properly formed");
 					System.out.println(e.getMessage());	
 				}
+			}else if(line.indexOf(CommandParser.CMD_TRAIN)!=-1){
+				//Train the data.
+				String [] parsed = parseTrainCommand(line);
+				//First element is category
+				if(parsed[0].equals(CommandParser.OPT_DANGER)){
+					classifier.trainOnText(parsed[1],NaiveBayes.CAT_DANGER);
+				}else if(parsed[0].equals(CommandParser.OPT_SAFE)){
+					classifier.trainOnText(parsed[1],NaiveBayes.CAT_SAFE);
+				}
+				this.dispatchTrainResponse();
 			}
 			//We can extend right here to implement more commands
 	}

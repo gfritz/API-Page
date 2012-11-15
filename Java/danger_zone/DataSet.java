@@ -35,6 +35,11 @@ public class DataSet{
 	private Iterator<Tweet> dataIter = dataset.iterator();
 
 	/**
+	*
+	*/
+	private transient String password = "";
+
+	/**
 	*Opens a connection to the database
 	*/
 	public Connection openConnection(String password) throws Exception{
@@ -48,6 +53,7 @@ public class DataSet{
 	  	Class.forName("com.mysql.jdbc.Driver").newInstance();
 	  	Connection c = DriverManager.getConnection(url, properties);
 	  	System.out.println(c);
+	  	this.password = password;
 	  	return c;
 	}
 
@@ -68,18 +74,27 @@ public class DataSet{
 	*/
 	public void sendTrainingData(int cat, String text){
 		//This function sends to test.online_training table;
+		boolean opened = false;
 		try {
+			if(con==null){
+				openConnection(password);
+				opened = true;
+			}
 			Statement query = con.createStatement();
 			String statement = "insert into online_training  (cat, traintext) values ( " + cat + "," + text + ");";
 			query.executeUpdate(statement);
 			query.close();
+			if(opened){
+				con.close();
+			}
 		}catch(SQLException s){
 			System.out.println("Error adding training data to online_training"  );
 			System.out.println("SQLException: " + s.getMessage());
 		}
 		System.out.println("Trainined on " + text);
+		
+	}	
 
-	}
 
 	/**
 	*Constructs the training set
@@ -156,6 +171,7 @@ public class DataSet{
 	public void close(){
 		try{ 
 			con.close();
+			con = null;
 		}catch(SQLException sql){
 			System.out.println("Problem closing the connection to the database");
 		}

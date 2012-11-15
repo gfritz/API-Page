@@ -12,9 +12,9 @@ import java.util.HashMap;
 *GEO FORMAT: LON XXX.XXXXXX LAT XXX.XXXXXXX where X's are numeric and to any precision.
 *GEO FORMAT: LON XXX.XXXXXX LAT XXX.XXXXXXX NUM XXX where NUM specifies up to how many nodes you would like returned.
 *KILL CODE: KILLSERVER0x0000
-*CLASSIFY DET  TEXT   Classifier will classify the text and return which category it is in, D or S for danger or safe.
+*CLASSIFY TEXT   Classifier will classify the text and return which category it is in, D or S for danger or safe.
 *TRAIN [D|S] TEXT classify given text as dangerous or safe, D will specify the text as Dangerouns and S as Safe.
-*TRAIN GEO
+*ADD DANGERZONE
 */
 public class CommandParser{
 	/**

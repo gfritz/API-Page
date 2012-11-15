@@ -54,8 +54,43 @@ public class BayesTrainer{
 		}
 	}
 
+	/**
+	*Trains the bayes on the tweet text.
+	*@param tweet The tweet string to be trained upon.
+	*/
 	public int classify(String tweet){
 		return bayes.classify(tweet);
+	}
+
+	/**
+	*Trains the bayes on just text and category versus on a tweet.
+	*@param text The text to be trained upon
+	*@param cat The category the text belongs to.
+	*/
+	public void trainOnText(String text, int cat){
+		//make a dummy tweet
+		boolean valid = false;
+		for(int acat : NaiveBayes.categories){
+			if(cat == acat){
+				valid = true;
+			}
+		}
+		//We will not accept weird categories.
+		if(!valid){return;}
+		//Train the bayes
+		bayes.train(cat,text);
+		//commit the changes to the database so we can preserve our smartness
+		commitTrain(text,cat);
+
+	}
+
+	/**
+	*Commits the text and category to the database that the naive bayes will train from. Without the training data being specifically a tweet.
+	*@param text the text to train on
+	*@param cat the category to classify the text into.
+	*/
+	public void commitTrain(String text, int cat){
+		data.sendTrainingData(cat,text);
 	}
 
 	/**
