@@ -14,6 +14,7 @@ import java.util.HashMap;
 *KILL CODE: KILLSERVER0x0000
 *CLASSIFY DET  TEXT   Classifier will classify the text and return which category it is in, D or S for danger or safe.
 *TRAIN [D|S] TEXT classify given text as dangerous or safe, D will specify the text as Dangerouns and S as Safe.
+*TRAIN GEO
 */
 public class CommandParser{
 	/**

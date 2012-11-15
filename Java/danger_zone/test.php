@@ -55,7 +55,7 @@ if(!$sock){
 	//	}
 	//	fclose($sock);
 	//	$sock = stream_socket_client($host . ':' . $hostport,$errno,$errstr,10);
-	//	fwrite($sock, "LON 91.12 LAT 40.78 NUM 3\r");
+	//	fwrite($sock, "CLASSIFY Gunshots in Syria");
 	//}
 	
 	fwrite($sock, "KILLSERVER0x0000");

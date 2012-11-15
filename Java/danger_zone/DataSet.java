@@ -62,6 +62,26 @@ public class DataSet{
 	}
 
 	/**
+	*This function commits data the naive bayes has been training on to the database so we can rebuild the bayes at anytime.
+	*@param cat category used by the bayes that the text belongs to
+	*@param text the string that is used in training the bayes.
+	*/
+	public void sendTrainingData(int cat, String text){
+		//This function sends to test.online_training table;
+		try {
+			Statement query = con.createStatement();
+			String statement = "insert into online_training  (cat, traintext) values ( " + cat + "," + text + ");";
+			query.executeUpdate(statement);
+			query.close();
+		}catch(SQLException s){
+			System.out.println("Error adding training data to online_training"  );
+			System.out.println("SQLException: " + s.getMessage());
+		}
+		System.out.println("Trainined on " + text);
+
+	}
+
+	/**
 	*Constructs the training set
 	*@param results The ResultSet from querying the database
 	*/
