@@ -194,11 +194,13 @@ public class DangerControlUDP  extends DangerControl{
 			if(line.indexOf(CommandParser.CMD_LON) != -1 && line.indexOf(CommandParser.CMD_LAT) != -1){
 				//Handle the command and respond to it
 				try{ 
-					this.dispatchResponse(this.handleGeoCommand(line),request);
+					Stack<DangerNode> temp = this.handleGeoCommand(line);
+					System.out.println(temp);
+					this.dispatchResponse(temp,request);
 				}catch(Exception e){
 					System.out.println("Error handling Geo Command: '"  + line + "' is not properly formed");
 					System.out.println("Exception: " + e.getMessage());
-					System.out.println("TracE: " + e.getStackTrace());
+					System.out.println("TracE: " + e.getCause());
 				}
 				//Force the stream to spit back to the client
 			}else if(line.trim().equals(CommandParser.KILL)){
