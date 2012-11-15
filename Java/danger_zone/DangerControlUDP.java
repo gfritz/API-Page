@@ -235,6 +235,23 @@ public class DangerControlUDP  extends DangerControl{
 			//We can extend right here to implement more commands
 	}
 
+	public void dispatchTrainResponse(boolean commited, DatagramPacket request){
+		JSONObject response = new JSONObject();
+		String responseString = commited ? "Yes" : "No";
+		response.put("Response", responseString);
+		InetAddress clientHost = request.getAddress();
+		int clientPort = request.getPort();
+		byte[] buf = (response.toString() + "\0").getBytes();
+	    DatagramPacket reply = new DatagramPacket(buf, buf.length, clientHost, clientPort);
+	    try{
+	    	clientListener.send(reply);
+	    }catch(IOException ioe){
+	    	System.out.println("Could not send the packet back to the client");
+	    	System.out.println("IOException: " +ioe.getMessage());
+	    }
+	}
+
+
 	/**
 	*Dispatches the class response to the client.
 	*@param responseString the string to send back to the user.

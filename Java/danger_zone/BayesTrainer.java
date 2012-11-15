@@ -77,7 +77,7 @@ public class BayesTrainer{
 			}
 		}
 		//We will not accept weird categories.
-		if(!valid){return;}
+		if(!valid){return false;}
 		//Train the bayes
 		bayes.train(cat,text);
 		//commit the changes to the database so we can preserve our smartness
