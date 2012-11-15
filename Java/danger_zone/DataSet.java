@@ -76,12 +76,13 @@ public class DataSet{
 		//This function sends to test.online_training table;
 		boolean opened = false;
 		try {
+			con = openConnection(password);
 			if(con==null){
 				con = openConnection(password);
 				opened = true;
 			}
 			Statement query = con.createStatement();
-			String statement = "insert into online_training  (cat, traintext) values ( " + cat + "," + text + ");";
+			String statement = "insert into online_training  (cat, traintext) values ( " + cat + ", \"" + text + "\");";
 			query.executeUpdate(statement);
 			query.close();
 			if(opened){
