@@ -236,6 +236,8 @@ public class DangerControlUDP  extends DangerControl{
 				}else if(parsed[0].equals(CommandParser.OPT_SAFE)){
 					System.out.println("SAFE");
 					commited = classifier.trainOnText(parsed[1],NaiveBayes.CAT_SAFE);
+				}else{
+					System.out.println("What?");
 				}
 				this.dispatchTrainResponse(commited, request);;
 			}

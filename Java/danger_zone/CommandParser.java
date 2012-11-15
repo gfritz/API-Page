@@ -119,7 +119,7 @@ public class CommandParser{
 	public static String parseClassifyCommand(String command){
 		String [] parts;
 		parts = command.split(" ");
-		if(parts[0] == CMD_CLASSIFY){
+		if(parts[0].equals(CMD_CLASSIFY)){
 			if(parts.length > 1){
 				//Run the string together
 				String text ="";
@@ -141,9 +141,9 @@ public class CommandParser{
 		String [] parts;
 		String [] elements = new String[]{"",""};
 		parts =command.split(" ");
-		if(parts[0] == CMD_TRAIN){
+		if(parts[0].equals(CMD_TRAIN)){
 			if(parts.length > 1){
-				if(parts[1]==OPT_DANGER || parts[1]==OPT_SAFE){
+				if(parts[1].equals(OPT_DANGER) || parts[1].equals(OPT_SAFE)){
 					String build = "";
 					for(int i = 2; i < parts.length; i++){
 						build += parts[i];
