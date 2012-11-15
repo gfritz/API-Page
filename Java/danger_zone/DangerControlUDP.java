@@ -235,6 +235,11 @@ public class DangerControlUDP  extends DangerControl{
 			//We can extend right here to implement more commands
 	}
 
+	/**
+	*Dispatches the class response to the client.
+	*@param responseString the string to send back to the user.
+	*@param request the packet to use to figure out addresses to send back to the user.
+	*/
 	public void dispatchTrainResponse(boolean commited, DatagramPacket request){
 		JSONObject response = new JSONObject();
 		String responseString = commited ? "Yes" : "No";
