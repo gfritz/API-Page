@@ -200,7 +200,7 @@ public class DangerControlUDP  extends DangerControl{
 				}catch(Exception e){
 					System.out.println("Error handling Geo Command: '"  + line + "' is not properly formed");
 					System.out.println("Exception: " + e.getMessage());
-					for(StackTraceelement element : e.getStackTrace()){
+					for(StackTraceElement element : e.getStackTrace()){
 						System.out.println("Trace: " + element.toString());
 					}
 				}

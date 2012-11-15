@@ -343,7 +343,12 @@ public class DangerNode{
 		float currentBest = treeStack.peek().sqDistance(searchNode);
 		bests.push(treeStack.peek());
 		while(depth != 0){
-			curNode = treeStack.pop();
+			if(treeStack.peek() != null){
+				curNode = treeStack.pop();	
+			}else{
+				//We have no more tree to search so just return
+				return bests;
+			}
 			//Check if this node is better
 			if(curNode.sqDistance(searchNode) < currentBest){
 				currentBest = curNode.sqDistance(searchNode);
