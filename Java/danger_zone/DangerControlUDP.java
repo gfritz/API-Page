@@ -222,7 +222,7 @@ public class DangerControlUDP  extends DangerControl{
 				}
 			}else if(line.indexOf(CommandParser.CMD_TRAIN)!=-1){
 				//Train the data.
-				String [] parsed = parseTrainCommand(line);
+				String [] parsed = CommandParser.parseTrainCommand(line);
 				//First element is category
 				if(parsed[0].equals(CommandParser.OPT_DANGER)){
 					classifier.trainOnText(parsed[1],NaiveBayes.CAT_DANGER);

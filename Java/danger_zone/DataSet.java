@@ -90,6 +90,9 @@ public class DataSet{
 		}catch(SQLException s){
 			System.out.println("Error adding training data to online_training"  );
 			System.out.println("SQLException: " + s.getMessage());
+		}catch(Exception e){
+			System.out.println("Error connecting to the database");
+			System.out.println("Exception: " + e.getMessage());
 		}
 		System.out.println("Trainined on " + text);
 		
