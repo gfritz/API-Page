@@ -196,7 +196,7 @@ public class DangerControlUDP  extends DangerControl{
 				try{ 
 					this.dispatchResponse(this.handleGeoCommand(line),request);
 				}catch(Exception e){
-					System.out.println("Error handling Geo Command: \"" + line + "\" is not properly formed");
+					System.out.println("Error handling Geo Command: '"  + line + "' is not properly formed");
 					System.out.println(e.getMessage());
 				}
 				//Force the stream to spit back to the client
@@ -262,14 +262,19 @@ public class DangerControlUDP  extends DangerControl{
 	*@param responseString the string to send back to the user.
 	*@param request the packet to use to figure out addresses to send back to the user.
 	*/
-	public void dispatchClassResponse(String responseString, DatagramPacket request) throws Exception{
+	public void dispatchClassResponse(String responseString, DatagramPacket request){
 		JSONObject response = new JSONObject();
 		response.put("Response", responseString);
 		InetAddress clientHost = request.getAddress();
 		int clientPort = request.getPort();
 		byte[] buf = (response.toString() + "\0").getBytes();
 	    DatagramPacket reply = new DatagramPacket(buf, buf.length, clientHost, clientPort);
-	    clientListener.send(reply);
+	    try{ 
+	 	   clientListener.send(reply);
+		}catch (Exception e) {
+			System.out.println("could not send response to client");
+			System.out.println("Exception: " + e.getMessage());
+		}
 	}
 
 
@@ -277,7 +282,7 @@ public class DangerControlUDP  extends DangerControl{
 	*Dispatches a response back to the client of the nearest neighbors to the point they asked for.
 	*@param neighbors The nearest zones returned by the search for the tree
 	*/
-	public void dispatchResponse(Stack<DangerNode> neighbors,DatagramPacket request) throws Exception{
+	public void dispatchResponse(Stack<DangerNode> neighbors,DatagramPacket request){
 		//Lets send the response as a json array of the nodes
 		JSONObject response = new JSONObject();
 		response.put("neighbors", neighbors);
@@ -286,7 +291,12 @@ public class DangerControlUDP  extends DangerControl{
 	    int clientPort = request.getPort();
 	    byte[] buf = (response.toString() + "\0").getBytes();
 	    DatagramPacket reply = new DatagramPacket(buf, buf.length, clientHost, clientPort);
-	    clientListener.send(reply);
+	    try{ 
+	 	   clientListener.send(reply);
+		}catch (Exception e) {
+			System.out.println("could not send response to client");
+			System.out.println("Exception: " + e.getMessage());
+		}
 	}
 
 	public void dispatchResponse(Stack<DangerNode> neighbors,DataOutputStream responseStream) throws Exception{

@@ -10,7 +10,7 @@ $serverSendPort = 5480;
 $serverRecvPort = 5480;
 
 //GEO CORDINATE TEST
-$message = "LON 91.12 LAT 40.78 NUM 3\r";
+$message = 'LON 91.12 LAT 40.78 NUM 3';
 socket_bind($socketHandle, $serverIP, $serverSendPort);
 
 echo 'MESSAGE: ' . $message . '<br />';
