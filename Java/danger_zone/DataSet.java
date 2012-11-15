@@ -77,7 +77,7 @@ public class DataSet{
 		boolean opened = false;
 		try {
 			if(con==null){
-				openConnection(password);
+				con = openConnection(password);
 				opened = true;
 			}
 			Statement query = con.createStatement();
