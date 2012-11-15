@@ -321,6 +321,7 @@ public class DangerControlUDP  extends DangerControl{
 				System.out.println("No Tree Initailized");
 				return null;
 			}
+			System.out.println("ARRAY " + geoCmd);
 			return dangerZones.nearestNeighbor(new float[]{geoCmd[0],geoCmd[1]},(int)geoCmd[2]);
 
 		}
