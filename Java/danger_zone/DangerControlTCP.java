@@ -157,15 +157,7 @@ public class DangerControlTCP extends DangerControl{
 		info.close();
 	}
 
-	/**
-	*Dummy function implemented to support parent class and polymorphism between UDP and TCP Dangercontrols
-	*/
-	public void handleLine(String line,DatagramPacket request){}
-	/**
-	*Dummy function implemented to support parent class and polymorphism between UDP and TCP Dangercontrols
-	*/
-	public void read(DatagramPacket request) throws Exception{}
-
+	
 	public void handleLine(String line,DataOutputStream request){
 		
 			//We should use some type of switch or something to figure out what function to call from the command parser
@@ -270,11 +262,6 @@ public class DangerControlTCP extends DangerControl{
 			System.out.println("Exception: " + e.getMessage());
 		}
 	}
-
-	/**
-	*Dummy function implemented to support parent class and polymorphism between UDP and TCP Dangercontrols
-	*/
-	public void dispatchResponse(Stack<DangerNode> neighbors,DatagramPacket responseStream) throws Exception{}
 
 	/**
 	*Parses a command in the GEO COMMAND format, will return the results of searching the tree for the specified coordinate and number of near zones

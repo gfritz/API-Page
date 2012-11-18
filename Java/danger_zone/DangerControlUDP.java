@@ -94,9 +94,6 @@ public class DangerControlUDP  extends DangerControl{
 	}
 
 	
-
-	
-
 	/**
 	*Run this instance of DangerControl for the specified amount of time as determined by time out.
 	*/
@@ -169,15 +166,6 @@ public class DangerControlUDP  extends DangerControl{
 		
 	}
 
-	/**
-	*Dummy function implemented to support parent class and polymorphism between UDP and TCP Dangercontrols
-	*/
-	public void read() throws Exception{}
-	/**
-	*Dummy function implemented to support parent class and polymorphism between UDP and TCP Dangercontrols
-	*/
-	public void handleLine(String line,DataOutputStream request){}
-
 	public void handleLine(String line,DatagramPacket request){
 		
 			//We should use some type of switch or something to figure out what function to call from the command parser
@@ -233,8 +221,8 @@ public class DangerControlUDP  extends DangerControl{
 	}
 
 	/**
-	*Dispatches the class response to the client.
-	*@param responseString the string to send back to the user.
+	*Dispatches the training response to the client.
+	*@param committed Whether or not the training was sucessful
 	*@param request the packet to use to figure out addresses to send back to the user.
 	*/
 	public void dispatchTrainResponse(boolean commited, DatagramPacket request){
@@ -296,11 +284,7 @@ public class DangerControlUDP  extends DangerControl{
 		}
 	}
 
-	/**
-	*Dummy function implemented to support parent class and polymorphism between UDP and TCP Dangercontrols
-	*/
-	public void dispatchResponse(Stack<DangerNode> neighbors,DataOutputStream responseStream) throws Exception{
-	}
+	
 
 	/**
 	*Parses a command in the GEO COMMAND format, will return the results of searching the tree for the specified coordinate and number of near zones

@@ -59,14 +59,8 @@ public abstract class DangerControl{
 	public abstract void trainBayes(String password,boolean debugOn);
 	public abstract void run() throws Exception;
 	public abstract void run(boolean continous) throws Exception;
-	public abstract void read(DatagramPacket request) throws Exception;
-	public abstract void read() throws Exception;
-	public abstract void handleLine(String line,DatagramPacket request);
-	public abstract void dispatchResponse(Stack<DangerNode> neighbors,DatagramPacket responseStream) throws Exception;
 	public abstract Stack<DangerNode> handleGeoCommand(String geoCommand);
-	public abstract void dispatchResponse(Stack<DangerNode> neighbors,DataOutputStream responseStream) throws Exception;
-	public abstract void handleLine(String line,DataOutputStream request);
-
+	
 	/**
 	*Sets the root node to the Danger Node Tree
 	*@param dn The node to the root of the tree.
