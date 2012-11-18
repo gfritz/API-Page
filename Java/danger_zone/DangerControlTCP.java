@@ -113,12 +113,13 @@ public class DangerControlTCP extends DangerControl{
 		while(DangerControl.continous){
 			System.out.println(DangerControl.continous);
 			if(!this.listen()){ continue Running; }
+				System.out.println("Reading Packet");
 				this.read();
 			
 		}
 		//Cleanup
-	
 		clientListener.close();	
+		classifier.close();
 		
 	}
 
@@ -133,17 +134,6 @@ public class DangerControlTCP extends DangerControl{
 		}catch(IOException e){
 			return false;
 		}	
-	}
-
-	/**
-	*Creates and constructs the tree stored in dangerZones from the database
-	*/
-	public void createTestTree(){
-		dangerZones = new DangerNode(9,9,1);
-		dangerZones.addNode(new DangerNode(7,2,4));
-		dangerZones.addNode(new DangerNode(12,12,5));
-		dangerZones.addNode(new DangerNode(15,13,6));
-		this.dangerZones = DangerNode.reBalanceTree(dangerZones);
 	}
 
 
@@ -167,7 +157,13 @@ public class DangerControlTCP extends DangerControl{
 		info.close();
 	}
 
+	/**
+	*Dummy function implemented to support parent class and polymorphism between UDP and TCP Dangercontrols
+	*/
 	public void handleLine(String line,DatagramPacket request){}
+	/**
+	*Dummy function implemented to support parent class and polymorphism between UDP and TCP Dangercontrols
+	*/
 	public void read(DatagramPacket request) throws Exception{}
 
 	public void handleLine(String line,DataOutputStream request){
@@ -202,36 +198,82 @@ public class DangerControlTCP extends DangerControl{
 					System.out.println("Error handling Classification Command: \"" + line + "\" is not properly formed");
 					System.out.println(e.getMessage());	
 				}
+			}else if(line.indexOf(CommandParser.CMD_TRAIN)!=-1){
+				//Train the data.
+				String [] parsed = CommandParser.parseTrainCommand(line);
+				//First element is category
+				boolean commited = false;
+				if(parsed[0].equals(CommandParser.OPT_DANGER)){
+					commited = classifier.trainOnText(parsed[1].trim(),NaiveBayes.CAT_DANGER);
+				}else if(parsed[0].equals(CommandParser.OPT_SAFE)){
+					commited = classifier.trainOnText(parsed[1].trim(),NaiveBayes.CAT_SAFE);
+				}else{
+					System.out.println("Unknown category");
+				}
+				this.dispatchTrainResponse(commited, request);;
+
 			}
 			//We can extend right here to implement more commands
+	}
+
+
+	/**
+	*Dispatches the training response to the client
+	*@param commited Whether or not the training was sucessful
+	*@param responseStream The stream used to send information back to the client.
+	*/
+	public void dispatchTrainResponse(boolean commited, DataOutputStream responseStream){
+		JSONObject response = new JSONObject();
+		String responseString = commited ? "Yes" : "No";
+		response.put("Response", responseString);
+
+		try{ 
+			responseStream.writeBytes(response.toString()+"\0");
+			responseStream.flush();	
+		}catch(IOException ioe){
+			System.out.println("could not send response to client");
+			System.out.println("Exception: " + ioe.getMessage());
+		}
 	}
 
 	/**
 	*Dispatches the class response to the client.
 	*@param responseString the string to send back to the user.
-	*@param request the packet to use to figure out addresses to send back to the user.
+	*@param responseStream The stream used to send information back to the client.
 	*/
-	public void dispatchClassResponse(String responseString, DataOutputStream responseStream) throws Exception{
+	public void dispatchClassResponse(String responseString, DataOutputStream responseStream){
 		JSONObject response = new JSONObject();
 		response.put("Response", responseString);
-		
-		responseStream.writeBytes(response.toString()+"\0");
-		responseStream.flush();	
+		try{		
+			responseStream.writeBytes(response.toString()+"\0");
+			responseStream.flush();	
+		}catch(IOException e){
+			System.out.println("could not send response to client");
+			System.out.println("Exception: " + e.getMessage());
+		}
 	}
 
 	/**
 	*Dispatches a response back to the client of the nearest neighbors to the point they asked for.
 	*@param neighbors The nearest zones returned by the search for the tree
 	*/
-	public void dispatchResponse(Stack<DangerNode> neighbors,DataOutputStream responseStream) throws Exception{
+	public void dispatchResponse(Stack<DangerNode> neighbors,DataOutputStream responseStream){
 		//Lets send the response as a json array of the nodes
 		JSONObject response = new JSONObject();
 		response.put("neighbors", neighbors);
 		//System.out.println(response);
-		responseStream.writeBytes(response.toString()+"\0");
-		responseStream.flush();	
+		try{
+			responseStream.writeBytes(response.toString()+"\0");
+			responseStream.flush();	
+		}catch(IOException e){
+			System.out.println("could not send response to client");
+			System.out.println("Exception: " + e.getMessage());
+		}
 	}
 
+	/**
+	*Dummy function implemented to support parent class and polymorphism between UDP and TCP Dangercontrols
+	*/
 	public void dispatchResponse(Stack<DangerNode> neighbors,DatagramPacket responseStream) throws Exception{}
 
 	/**

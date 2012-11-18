@@ -169,7 +169,13 @@ public class DangerControlUDP  extends DangerControl{
 		
 	}
 
+	/**
+	*Dummy function implemented to support parent class and polymorphism between UDP and TCP Dangercontrols
+	*/
 	public void read() throws Exception{}
+	/**
+	*Dummy function implemented to support parent class and polymorphism between UDP and TCP Dangercontrols
+	*/
 	public void handleLine(String line,DataOutputStream request){}
 
 	public void handleLine(String line,DatagramPacket request){
@@ -290,6 +296,9 @@ public class DangerControlUDP  extends DangerControl{
 		}
 	}
 
+	/**
+	*Dummy function implemented to support parent class and polymorphism between UDP and TCP Dangercontrols
+	*/
 	public void dispatchResponse(Stack<DangerNode> neighbors,DataOutputStream responseStream) throws Exception{
 	}
 
