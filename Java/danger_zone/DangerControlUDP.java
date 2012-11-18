@@ -93,16 +93,10 @@ public class DangerControlUDP  extends DangerControl{
 		classifier.close();
 	}
 
-	/**
-	*Sets the root node to the Danger Node Tree
-	*@param dn The node to the root of the tree.
-	*/
-	public void setRootNode(DangerNode dn){
-		dangerZones = dn;
-	}
+	
 
 	/**
-	*Creates and constructs the tree stored in dangerZones from the database
+	*Creates a small testing tree
 	*/
 	public void createTestTree(){
 		dangerZones = new DangerNode(9,9,1);

@@ -15,7 +15,7 @@ import org.json.simple.JSONObject;
 *@since 2012-10-5
 *
 * KD Tree / Listening Object Interface for the danger zone application.
-* Provides a wrapper for an interface to the all important Danger Zone K-d(2) Tree
+* Interface providing functionality to DangerControl UDP and TCP
 */
 public abstract class DangerControl{
 	/**
@@ -68,6 +68,25 @@ public abstract class DangerControl{
 	public abstract Stack<DangerNode> handleGeoCommand(String geoCommand);
 	public abstract void dispatchResponse(Stack<DangerNode> neighbors,DataOutputStream responseStream) throws Exception;
 	public abstract void handleLine(String line,DataOutputStream request);
+
+	/**
+	*Sets the root node to the Danger Node Tree
+	*@param dn The node to the root of the tree.
+	*/
+	public void setRootNode(DangerNode dn){
+		dangerZones = dn;
+	}
+
+	/**
+	*Creates a small testing tree
+	*/
+	public void createTestTree(){
+		dangerZones = new DangerNode(9,9,1);
+		dangerZones.addNode(new DangerNode(7,2,4));
+		dangerZones.addNode(new DangerNode(12,12,5));
+		dangerZones.addNode(new DangerNode(15,13,6));
+		this.dangerZones = DangerNode.reBalanceTree(dangerZones);
+	}
 
 	/**
 	*Classifies the tweet from the passed in line using the classifier.

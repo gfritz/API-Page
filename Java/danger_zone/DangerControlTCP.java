@@ -84,16 +84,7 @@ public class DangerControlTCP extends DangerControl{
 		classifier.close();
 	}
 
-	/**
-	*TESTING Creates and constructs the tree stored in dangerZones from the database
-	*/
-	public void createTree(){
-		dangerZones = new DangerNode(9,9,1);
-		dangerZones.addNode(new DangerNode(7,2,4));
-		dangerZones.addNode(new DangerNode(12,12,5));
-		dangerZones.addNode(new DangerNode(15,13,6));
-		this.dangerZones = DangerNode.reBalanceTree(dangerZones);
-	}
+	
 
 	/**
 	*Run this instance of DangerControl
