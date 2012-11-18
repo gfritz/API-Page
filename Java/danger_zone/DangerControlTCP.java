@@ -69,7 +69,7 @@ public class DangerControlTCP extends DangerControl{
 		clientListener = new ServerSocket(port_number);
 		//clientListener.setSoTimeout(int_timeout);
 		//Construct the Tree to hold the danger zones (note this should be replaced by a tree building from sql function)
-		this.createTree();
+		this.createTestTree();
 
 
 	}
@@ -101,13 +101,6 @@ public class DangerControlTCP extends DangerControl{
 		clientListener.close();
 	}
 
-	/**
-	*Sets the root node to the Danger Node Tree
-	*@param dn The node to the root of the tree.
-	*/
-	public void setRootNode(DangerNode dn){
-		dangerZones = dn;
-	}
 
 	/**
 	*Run the instance of Danger Control continously without a timeout, only a kill message passed or a kill command from the OS will shut down the instance

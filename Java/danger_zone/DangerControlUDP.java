@@ -95,16 +95,7 @@ public class DangerControlUDP  extends DangerControl{
 
 	
 
-	/**
-	*Creates a small testing tree
-	*/
-	public void createTestTree(){
-		dangerZones = new DangerNode(9,9,1);
-		dangerZones.addNode(new DangerNode(7,2,4));
-		dangerZones.addNode(new DangerNode(12,12,5));
-		dangerZones.addNode(new DangerNode(15,13,6));
-		this.dangerZones = DangerNode.reBalanceTree(dangerZones);
-	}
+	
 
 	/**
 	*Run this instance of DangerControl for the specified amount of time as determined by time out.
@@ -120,7 +111,6 @@ public class DangerControlUDP  extends DangerControl{
 		}
 		//Cleanup
 		clientListener.close();
-		///Commit any changes to databases here
 		
 	}
 

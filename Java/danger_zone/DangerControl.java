@@ -57,8 +57,6 @@ public abstract class DangerControl{
 	static boolean continous = false;
 
 	public abstract void trainBayes(String password,boolean debugOn);
-	public abstract void setRootNode(DangerNode dn);
-	public abstract void createTestTree();
 	public abstract void run() throws Exception;
 	public abstract void run(boolean continous) throws Exception;
 	public abstract void read(DatagramPacket request) throws Exception;
