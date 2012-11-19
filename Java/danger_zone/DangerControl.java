@@ -69,6 +69,7 @@ public abstract class DangerControl{
 		System.out.println("Setting root node");
 		dangerZones = dn;
 		this.dangerZones = DangerNode.reBalanceTree(dn);
+		System.out.println("root node is now: " + this.dangerZones);
 	}
 
 	/**
