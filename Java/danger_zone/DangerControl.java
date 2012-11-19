@@ -67,6 +67,7 @@ public abstract class DangerControl{
 	*/
 	public void setRootNode(DangerNode dn){
 		dangerZones = dn;
+		this.dangerZones = DangerNode.reBalanceTree(dn);
 	}
 
 	/**
