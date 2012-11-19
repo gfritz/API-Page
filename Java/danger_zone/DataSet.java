@@ -52,7 +52,7 @@ public class DataSet{
 
 	  	Class.forName("com.mysql.jdbc.Driver").newInstance();
 	  	Connection c = DriverManager.getConnection(url, properties);
-	  	System.out.println(c);
+	  	//System.out.println(c);
 	  	this.password = password;
 	  	return c;
 	}
