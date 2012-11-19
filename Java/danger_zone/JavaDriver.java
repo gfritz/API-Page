@@ -74,6 +74,9 @@ public class JavaDriver{
 			System.out.println(e.getStackTrace());
 			System.out.println("ERROR MESSAGE: " + e.getMessage());
 			System.out.println("Aborting setup");
+			for(StackTraceElement element : e.getStackTrace()){
+				System.out.println("Trace: " + element.toString());
+			}
 			return;	
 		}
 		//Initial training of the naive bayes clasifier
