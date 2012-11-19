@@ -46,11 +46,13 @@ public class JavaDriver{
 	public void run(String password, String username){
 
 		//Initalize Control
-		System.out.println("Creating Danger Control Process");
+		System.out.print("Creating Danger Control Process");
 		try{ 
 			if(usingUDP){
+				System.out.println(" using UDP");
 				dcUDP = new DangerControlUDP();
 			}else{
+				System.out.println(" using TCP");
 				dcUDP = new DangerControlTCP();
 			}
 		}catch(Exception e){
