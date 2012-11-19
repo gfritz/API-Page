@@ -44,7 +44,7 @@ public class DangerControlUDP  extends DangerControl{
 	/**
 	*Data Structure to hold the dangerZones from the database. 
 	*/
-	DangerNode dangerZones = null;
+	public DangerNode dangerZones = null;
 	/**
 	*Port number to communicate to the client with
 	*/
