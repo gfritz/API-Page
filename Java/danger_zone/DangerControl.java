@@ -65,7 +65,7 @@ public abstract class DangerControl{
 	*Sets the root node to the Danger Node Tree
 	*@param dn The node to the root of the tree.
 	*/
-	public void setRootNode(DangerNode dn){
+	final public void setRootNode(DangerNode dn){
 		System.out.println("Setting root node");
 		dangerZones = dn;
 		this.dangerZones = DangerNode.reBalanceTree(dn);
