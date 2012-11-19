@@ -60,17 +60,8 @@ public abstract class DangerControl{
 	public abstract void run() throws Exception;
 	public abstract void run(boolean continous) throws Exception;
 	public abstract Stack<DangerNode> handleGeoCommand(String geoCommand);
+	public abstract DangerNode setRootNode(DangerNode dn);
 	
-	/**
-	*Sets the root node to the Danger Node Tree
-	*@param dn The node to the root of the tree.
-	*/
-	public void setRootNode(DangerNode dn){
-		System.out.println("Setting root node");
-		dangerZones = dn;
-		this.dangerZones = DangerNode.reBalanceTree(dn);
-		System.out.println("root node is now: " + this.dangerZones);
-	}
 
 	/**
 	*Creates a small testing tree

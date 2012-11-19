@@ -76,11 +76,12 @@ public class DangerControlTCP extends DangerControl{
 	*Sets the root node to the Danger Node Tree
 	*@param dn The node to the root of the tree.
 	*/
-	public void setRootNode(DangerNode dn){
+	public DangerNode setRootNode(DangerNode dn){
 		System.out.println("Setting root node");
 		dangerZones = dn;
 		this.dangerZones = DangerNode.reBalanceTree(dn);
-		System.out.println("root node is now: " + this.dangerZones);
+		System.out.println("After balancing root node is now: " + this.dangerZones);
+		return this.dangerZones;
 	}
 
 	/**

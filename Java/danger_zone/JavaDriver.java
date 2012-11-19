@@ -66,7 +66,8 @@ public class JavaDriver{
 		System.out.println("Creating Danger Zone Tree");
 		try{
 			ArrayList<DangerNode> nodes =  DangerNode.fetchDangers(username,password);
-			dcUDP.setRootNode(DangerNode.makeTree(nodes));
+			System.out.println(nodes.size());
+			dcUDP.dangerZones = dcUDP.setRootNode(DangerNode.makeTree(nodes));
 			System.out.println("Tree created" + dcUDP.dangerZones);
 			dcUDP.dangerZones.printTree();
 			System.out.println("Tree created with " + nodes.size() + " nodes and root node of " + dcUDP.dangerZones);
