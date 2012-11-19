@@ -66,9 +66,7 @@ public class JavaDriver{
 		System.out.println("Creating Danger Zone Tree");
 		try{
 			ArrayList<DangerNode> nodes =  DangerNode.fetchDangers(username,password);
-			System.out.println(nodes.size());
 			dcUDP.dangerZones = dcUDP.setRootNode(DangerNode.makeTree(nodes));
-			System.out.println("Tree created" + dcUDP.dangerZones);
 			dcUDP.dangerZones.printTree();
 			System.out.println("Tree created with " + nodes.size() + " nodes and root node of " + dcUDP.dangerZones);
 		}catch(Exception e){
@@ -88,7 +86,6 @@ public class JavaDriver{
 		System.out.println("Running the Java Server Component");
 		try{ 
 			if(JavaDriver.continous){
-				System.out.println("DEBUG: " + dcUDP.dangerZones);
 				dcUDP.run(JavaDriver.continous);
 			}else{
 				DangerControl.int_timeout = timeout;

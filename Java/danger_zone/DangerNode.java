@@ -517,7 +517,6 @@ public class DangerNode{
 			root.addNode(dangernode);
 		}
 
-		System.out.println("DEBUG: root node in makeTree: " + root );
 		//Now rebalance the tree and return it.
 		return DangerNode.reBalanceTree(root);
 	}
