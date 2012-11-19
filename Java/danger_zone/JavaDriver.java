@@ -72,8 +72,7 @@ public class JavaDriver{
 			System.out.println("Tree created with " + nodes.size() + " nodes and root node of " + dcUDP.dangerZones);
 		}catch(Exception e){
 			System.out.println("Could not create K-D Tree from the database. Printing Trace:");
-			System.out.println(e.getStackTrace());
-			System.out.println("ERROR MESSAGE: " + e.getMessage());
+			System.out.println("ERROR MESSAGE: " + e.getMessage() + "\n" + e.toString());
 			System.out.println("Aborting setup");
 			for(StackTraceElement element : e.getStackTrace()){
 				System.out.println("Trace: " + element.toString());
