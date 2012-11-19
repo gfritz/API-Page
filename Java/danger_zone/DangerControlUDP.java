@@ -173,7 +173,6 @@ public class DangerControlUDP  extends DangerControl{
 				//Handle the command and respond to it
 				try{ 
 					Stack<DangerNode> temp = this.handleGeoCommand(line.trim());
-					System.out.println(temp.peek());
 					this.dispatchResponse(temp,request);
 				}catch(Exception e){
 					System.out.println("Error handling Geo Command: '"  + line + "' is not properly formed");
