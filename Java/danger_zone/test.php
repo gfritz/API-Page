@@ -1,7 +1,9 @@
 
 <?php
 //Danger Socket Test
-
+$UDP = false;
+//UDP TESTING
+if($UDP){ 
 
 $domain = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN' ? AF_INET : AF_INET);
 $socketHandle = socket_create($domain, SOCK_DGRAM, SOL_UDP);
@@ -50,10 +52,10 @@ $message = 'KILLSERVER0x0000';
 echo 'MESSAGE: ' . $message . '<br />';
 socket_sendto($socketHandle, $message, strlen($message), MSG_EOF, $serverIP, $serverSendPort);
 
+}else{ 
 
+//TCP CONNECTION TESTIN
 
-
-/*
 //Send Text of "LON 91.12 LAT 40.78"
 $host ="dangerzone.cems.uvm.edu";  
 $hostport = 5480;  
@@ -76,5 +78,6 @@ if(!$sock){
 	fwrite($sock, "KILLSERVER0x0000");
 	fclose($sock);
 }
-*/
+
+}
 ?>

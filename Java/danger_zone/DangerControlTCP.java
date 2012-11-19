@@ -11,8 +11,8 @@ import org.json.simple.JSONObject;
 
 /**
 *@author Ethan Eldridge <ejayeldridge @ gmail.com>
-*@version 0.1
-*@since 2012-10-5
+*@version 0.2
+*@since 2012-11-18
 *
 * KD Tree / Listening Object Interface for the danger zone application.
 * Provides a wrapper for an interface to the all important Danger Zone K-d(2) Tree

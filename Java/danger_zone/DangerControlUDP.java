@@ -12,8 +12,8 @@ import org.json.simple.JSONObject;
 
 /**
 *@author Ethan Eldridge <ejayeldridge @ gmail.com>
-*@version 0.2
-*@since 2012-10-14
+*@version 0.3
+*@since 2012-11-18
 *
 * KD Tree / Listening Object Interface for the danger zone application.
 * Uses UDP networking because it is expected that the sockets are used for interprocess communication and therefore
