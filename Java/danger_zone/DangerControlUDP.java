@@ -166,7 +166,7 @@ public class DangerControlUDP  extends DangerControl{
 	}
 
 	public void handleLine(String line,DatagramPacket request){
-			System.out.println(dangerZones);
+			System.out.println(this.dangerZones);
 			//We should use some type of switch or something to figure out what function to call from the command parser
 			if(line.indexOf(CommandParser.CMD_LON) != -1 && line.indexOf(CommandParser.CMD_LAT) != -1){
 				//Handle the command and respond to it
