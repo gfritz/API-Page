@@ -299,7 +299,7 @@ public class DangerControlUDP  extends DangerControl{
 			//We have recieved the Coordinates and should play with the tree
 			//System.out.println("Searching tree for " + geoCmd[0] + " " + geoCmd[1]);
 			if(dangerZones == null){
-				System.out.println("No Tree Initailized");
+				System.out.println("Error: No Tree Initailized");
 				return null;
 			}
 			return dangerZones.nearestNeighbor(new float[]{geoCmd[0],geoCmd[1]},(int)geoCmd[2]);
