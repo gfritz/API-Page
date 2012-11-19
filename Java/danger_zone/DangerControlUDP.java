@@ -86,7 +86,7 @@ public class DangerControlUDP  extends DangerControl{
 	*/
 	public void setRootNode(DangerNode dn){
 		System.out.println("Setting root node");
-		dangerZones = dn;
+		this.dangerZones = dn;
 		this.dangerZones = DangerNode.reBalanceTree(dn);
 		System.out.println("root node is now: " + this.dangerZones);
 	}

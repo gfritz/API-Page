@@ -67,12 +67,12 @@ public class JavaDriver{
 		try{
 			ArrayList<DangerNode> nodes =  DangerNode.fetchDangers(username,password);
 			dcUDP.setRootNode(DangerNode.makeTree(nodes));
-			System.out.println("Tree created");
+			System.out.println("Tree created" + dcUDP.dangerZones);
 			dcUDP.dangerZones.printTree();
 			System.out.println("Tree created with " + nodes.size() + " nodes and root node of " + dcUDP.dangerZones);
 		}catch(Exception e){
 			System.out.println("Could not create K-D Tree from the database. Printing Trace:");
-			System.out.println("ERROR MESSAGE: " + e.getMessage() + "\n" + e.toString());
+			System.out.println("ERROR MESSAGE: " + e.getMessage() + "\n\t" + e.toString());
 			System.out.println("Aborting setup");
 			for(StackTraceElement element : e.getStackTrace()){
 				System.out.println("Trace: " + element.toString());
