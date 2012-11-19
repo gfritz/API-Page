@@ -77,7 +77,6 @@ public class DangerControlUDP  extends DangerControl{
 		clientListener = new DatagramSocket(port_number);
 		//clientListener.setSoTimeout(int_timeout);
 		//Construct the Tree to hold the danger zones (note this should be replaced by a tree building from sql function)
-		this.createTestTree();
 		clientListener.setReuseAddress(true);
 
 
@@ -167,7 +166,7 @@ public class DangerControlUDP  extends DangerControl{
 	}
 
 	public void handleLine(String line,DatagramPacket request){
-		
+			System.out.println(dangerZones);
 			//We should use some type of switch or something to figure out what function to call from the command parser
 			if(line.indexOf(CommandParser.CMD_LON) != -1 && line.indexOf(CommandParser.CMD_LAT) != -1){
 				//Handle the command and respond to it

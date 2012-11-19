@@ -84,6 +84,7 @@ public class JavaDriver{
 		System.out.println("Running the Java Server Component");
 		try{ 
 			if(JavaDriver.continous){
+				System.out.println("DEBUG: " + dcUDP.dangerZones);
 				dcUDP.run(JavaDriver.continous);
 			}else{
 				DangerControl.int_timeout = timeout;
