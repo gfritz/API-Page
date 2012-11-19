@@ -568,7 +568,7 @@ public class DangerNode{
 
 			stmt.close();
 			con.close();
-			System.out.print("Closing connection for Tree");
+			System.out.println("Closing connection for Tree");
 
 			return fetchedList;
 
