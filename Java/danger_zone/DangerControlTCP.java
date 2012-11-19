@@ -41,7 +41,7 @@ public class DangerControlTCP extends DangerControl{
 	/**
 	*Data Structure to hold the dangerZones from the database. 
 	*/
-	DangerNode dangerZones = null;
+	public DangerNode dangerZones = null;
 	/**
 	*Port number to communicate to the client with
 	*/
@@ -70,8 +70,17 @@ public class DangerControlTCP extends DangerControl{
 		//clientListener.setSoTimeout(int_timeout);
 		//Construct the Tree to hold the danger zones (note this should be replaced by a tree building from sql function)
 		this.createTestTree();
+	}
 
-
+	/**
+	*Sets the root node to the Danger Node Tree
+	*@param dn The node to the root of the tree.
+	*/
+	public void setRootNode(DangerNode dn){
+		System.out.println("Setting root node");
+		dangerZones = dn;
+		this.dangerZones = DangerNode.reBalanceTree(dn);
+		System.out.println("root node is now: " + this.dangerZones);
 	}
 
 	/**

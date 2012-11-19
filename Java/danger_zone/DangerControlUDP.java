@@ -78,8 +78,17 @@ public class DangerControlUDP  extends DangerControl{
 		//clientListener.setSoTimeout(int_timeout);
 		//Construct the Tree to hold the danger zones (note this should be replaced by a tree building from sql function)
 		clientListener.setReuseAddress(true);
+	}
 
-
+	/**
+	*Sets the root node to the Danger Node Tree
+	*@param dn The node to the root of the tree.
+	*/
+	public void setRootNode(DangerNode dn){
+		System.out.println("Setting root node");
+		dangerZones = dn;
+		this.dangerZones = DangerNode.reBalanceTree(dn);
+		System.out.println("root node is now: " + this.dangerZones);
 	}
 
 	/**
