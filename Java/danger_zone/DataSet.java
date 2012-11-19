@@ -67,6 +67,12 @@ public class DataSet{
 		return query.getResultSet();
 	}
 
+	public ResultSet getOnlineData() throws Exception{
+		Statement query = con.createStatement();
+		query.executeQuery("SELECT * FROM online_training;");
+		return query.getResultSet();
+	}
+
 	/**
 	*This function commits data the naive bayes has been training on to the database so we can rebuild the bayes at anytime.
 	*@param cat category used by the bayes that the text belongs to
@@ -143,8 +149,10 @@ public class DataSet{
 			con = openConnection(password);
 			System.out.println("connect");
 			ResultSet data = getData();
-			System.out.println("got data");
+			System.out.println("Fetching data from tweets");
 			constructTrainingDataSet(data);	
+			System.out.println("Fetching data from user inputs");
+			constructTrainingDataSet(getOnlineData());
 			System.out.println("constructed");
 			close();
 			System.out.println("Disconnecting DataSet");
