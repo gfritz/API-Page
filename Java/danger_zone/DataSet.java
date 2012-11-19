@@ -135,6 +135,30 @@ public class DataSet{
 		dataIter = dataset.iterator();
 	}
 
+	/**
+	*Constructs the training set from the online user input information
+	*@param results The ResultSet from querying the database
+	*/
+	public void constructTrainingDataSetFromOnline(ResultSet results) throws Exception{
+		try{
+			while(results.next()){
+
+				int id = results.getInt(1);
+				String text = results.getString(2);				
+				int category = results.getInt(3);
+				dataset.add(new Training_Tweet((int)id, text, category));
+			}
+		}catch(java.sql.SQLException jSQL){
+			//Do nothing
+			System.out.println(jSQL.getMessage());
+			System.out.println(jSQL.getStackTrace());
+		}finally{
+			//Cut off the results connection
+			results.close();
+		}
+		dataIter = dataset.iterator();
+	}
+
 	public void addTweet(String id, String nuId, String lat, String lon, String text, String created, String somethingelseishouldcontinueherelateron ){
 
 	}
@@ -152,7 +176,7 @@ public class DataSet{
 			System.out.println("Fetching data from tweets");
 			constructTrainingDataSet(data);	
 			System.out.println("Fetching data from user inputs");
-			constructTrainingDataSet(getOnlineData());
+			constructTrainingDataSetFromOnline(getOnlineData());
 			System.out.println("constructed");
 			close();
 			System.out.println("Disconnecting DataSet");
