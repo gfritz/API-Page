@@ -342,8 +342,13 @@ public class DangerNode{
 		final DangerNode searchNode = new DangerNode(searchTuple[0],searchTuple[1],-1);
 		float currentBest = treeStack.peek().sqDistance(searchNode);
 		bests.push(treeStack.peek());
-		while(depth != 0){
-			curNode = treeStack.pop();
+		while(depth > 0){
+			if(!treeStack.empty()){
+				curNode = treeStack.pop();	
+			}else{
+				//We have no more tree to search so just return
+				return bests;
+			}
 			//Check if this node is better
 			if(curNode.sqDistance(searchNode) < currentBest){
 				currentBest = curNode.sqDistance(searchNode);
@@ -499,7 +504,7 @@ public class DangerNode{
 	*@param nodes The list of nodes to be used in constructing the balanced tree.
 	*@return The root of the newly built and balanced tree.
 	*/
-	final public DangerNode makeTree(ArrayList<DangerNode> nodes){
+	final public static DangerNode makeTree(ArrayList<DangerNode> nodes){
 		//Check if the list is empty
 		if(nodes.isEmpty()){return null;}
 
@@ -522,12 +527,10 @@ public class DangerNode{
 	*@param password The password to connect to the database. From command line argument.
 	*@return The root of the newly built and balanced tree.
 	*/
-	static final public ArrayList<DangerNode> fetchDangers(String credentials[]) throws Exception{
+	static final public ArrayList<DangerNode> fetchDangers(String user, String password) throws Exception{
 		// Guide: http://www.java-samples.com/showtutorial.php?tutorialid=9
 
 		String dbUrl = "jdbc:mysql://dangerzone.cems.uvm.edu/DangerZone";
-		String user = credentials[0];
-		String password = credentials[1];
 		String dbClass = "com.mysql.jdbc.Driver";
 		String query = "SELECT * FROM tbl_danger_zone";
 
@@ -563,6 +566,10 @@ public class DangerNode{
 				fetchedList.add(node);
 			}//end while
 
+			stmt.close();
+			con.close();
+			System.out.println("Closing connection for Tree");
+
 			return fetchedList;
 
 		}//end try
@@ -591,7 +598,7 @@ public class DangerNode{
 		
 		// ArrayList of DangerNodes to hold the nodes collected from the database.
 		// Fetch the DangerNodes
-		ArrayList<DangerNode> nodes = fetchDangers(args);
+		ArrayList<DangerNode> nodes = fetchDangers(args[0],args[1]);
 
 		System.out.println("Printing fetched nodes.");
 

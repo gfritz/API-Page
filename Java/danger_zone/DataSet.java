@@ -35,6 +35,11 @@ public class DataSet{
 	private Iterator<Tweet> dataIter = dataset.iterator();
 
 	/**
+	*
+	*/
+	private transient String password = "";
+
+	/**
 	*Opens a connection to the database
 	*/
 	public Connection openConnection(String password) throws Exception{
@@ -47,7 +52,8 @@ public class DataSet{
 
 	  	Class.forName("com.mysql.jdbc.Driver").newInstance();
 	  	Connection c = DriverManager.getConnection(url, properties);
-	  	System.out.println(c);
+	  	//System.out.println(c);
+	  	this.password = password;
 	  	return c;
 	}
 
@@ -60,6 +66,49 @@ public class DataSet{
 		query.executeQuery("SELECT * FROM tbl_tweet");
 		return query.getResultSet();
 	}
+
+	public ResultSet getOnlineData() throws Exception{
+		Statement query = con.createStatement();
+		query.executeQuery("SELECT * FROM online_training;");
+		return query.getResultSet();
+	}
+
+	/**
+	*This function commits data the naive bayes has been training on to the database so we can rebuild the bayes at anytime.
+	*@param cat category used by the bayes that the text belongs to
+	*@param text the string that is used in training the bayes.
+	*/
+	public boolean sendTrainingData(int cat, String text){
+		//This function sends to test.online_training table;
+		try {
+			//Get connection (connection is closed by this point)
+			con = openConnection(password);
+			
+			PreparedStatement query = con.prepareStatement("insert into online_training  (cat, traintext) values (?,?);");
+			query.setInt(1,cat);
+			query.setString(2,text);
+			System.out.println("CAT: " + cat);
+			System.out.println("TEXT: " + text);
+			query.executeUpdate();
+			query.close();
+			
+			//Close
+			con.close();
+			
+		}catch(SQLException s){
+			System.out.println("Error adding training data to online_training"  );
+			System.out.println("SQLException: " + s.getMessage());
+			return false;
+		}catch(Exception e){
+			System.out.println("Error connecting to the database");
+			System.out.println("Exception: " + e.getMessage());
+			return false;
+		}
+		System.out.println("Trainined on " + text);
+		return true;
+		
+	}	
+
 
 	/**
 	*Constructs the training set
@@ -87,6 +136,35 @@ public class DataSet{
 	}
 
 	/**
+	*Constructs the training set from the online user input information
+	*@param results The ResultSet from querying the database
+	*/
+	public void constructTrainingDataSetFromOnline(ResultSet results) throws Exception{
+		try{
+			while(results.next()){
+
+				int id = results.getInt(1);
+				String text = results.getString(2);				
+				int category = results.getInt(3);
+				dataset.add(new Training_Tweet((int)id, text, category));
+			}
+		}catch(java.sql.SQLException jSQL){
+			//Do nothing
+			System.out.println(jSQL.getMessage());
+			System.out.println(jSQL.getStackTrace());
+		}finally{
+			//Cut off the results connection
+			results.close();
+		}
+		dataIter = dataset.iterator();
+	}
+
+	public void addTweet(String id, String nuId, String lat, String lon, String text, String created, String somethingelseishouldcontinueherelateron ){
+
+	}
+
+
+	/**
 	*Initalizes the data set to use the database and create an interface for the database.
 	*@return Returns true if initialization succeeded.
 	*/
@@ -95,9 +173,13 @@ public class DataSet{
 			con = openConnection(password);
 			System.out.println("connect");
 			ResultSet data = getData();
-			System.out.println("got data");
+			System.out.println("Fetching data from tweets");
 			constructTrainingDataSet(data);	
+			System.out.println("Fetching data from user inputs");
+			constructTrainingDataSetFromOnline(getOnlineData());
 			System.out.println("constructed");
+			close();
+			System.out.println("Disconnecting DataSet");
 		}catch(Exception e){
 			System.out.println("Exception: ");
 			System.out.println(e.getStackTrace() + " " + e.getMessage());
@@ -106,6 +188,10 @@ public class DataSet{
 		return true;
 	}
 
+	/**
+	*Gets the next tweet in the dataset. If run out, we return null and recreate the iterator.
+	*@return the next Tweet in this dataset.
+	*/
 	public Tweet getNext(){
 		if(dataIter.hasNext()){
 			return dataIter.next();
@@ -120,6 +206,17 @@ public class DataSet{
 	*/
 	public int size(){
 		return dataset.size();
+	}
+
+	/**
+	*Closes the connection to the database
+	*/
+	public void close(){
+		try{ 
+			con.close();
+		}catch(SQLException sql){
+			System.out.println("Problem closing the connection to the database");
+		}
 	}
 
 	public static void main(String[] args) {

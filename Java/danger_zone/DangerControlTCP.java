@@ -9,26 +9,23 @@ import org.json.simple.JSONObject;
 
 
 
-
 /**
 *@author Ethan Eldridge <ejayeldridge @ gmail.com>
-*@version 0.3
+*@version 0.2
 *@since 2012-11-18
 *
 * KD Tree / Listening Object Interface for the danger zone application.
-* Uses UDP networking because it is expected that the sockets are used for interprocess communication and therefore
-* loss won't be a problem.
+* Provides a wrapper for an interface to the all important Danger Zone K-d(2) Tree
 */
-public class DangerControlUDP  extends DangerControl{
+public class DangerControlTCP extends DangerControl{
 	/**
 	*Debug variable, if specified as true, output messages will be displayed. 
 	*/
 	static boolean debugOn = true;
-
 	/**
 	*Socket to accept incoming queries to the Danger Control interface, listens on port 5480
 	*/
-	DatagramSocket clientListener = null;
+	ServerSocket clientListener = null;
 	/**
 	*Timeout for the DangerControl program's clientListener, this must be set in integer form (Seconds)
 	*/
@@ -50,11 +47,6 @@ public class DangerControlUDP  extends DangerControl{
 	*/
 	static int port_number = 5480;
 	/**
-	*Packet recieved by server from the client
-	*/
-	DatagramPacket request = null;
-
-	/**
 	*Classifer interface to allow for feed back to the classifier from incoming command messages.
 	*/
 	BayesTrainer classifier = new BayesTrainer();
@@ -72,12 +64,12 @@ public class DangerControlUDP  extends DangerControl{
 	/**
 	*Creates an instance of the DangerControl class.
 	*/
-	public DangerControlUDP() throws Exception{
+	public DangerControlTCP() throws Exception{
 		//5480 For Listening, 5481 to send back out
-		clientListener = new DatagramSocket(port_number);
+		clientListener = new ServerSocket(port_number);
 		//clientListener.setSoTimeout(int_timeout);
 		//Construct the Tree to hold the danger zones (note this should be replaced by a tree building from sql function)
-		clientListener.setReuseAddress(true);
+		this.createTestTree();
 	}
 
 	/**
@@ -101,22 +93,22 @@ public class DangerControlUDP  extends DangerControl{
 	}
 
 	
+
 	/**
-	*Run this instance of DangerControl for the specified amount of time as determined by time out.
+	*Run this instance of DangerControl
 	*/
 	public void run() throws Exception{
-		System.out.println("Running Server with Timeout");
 		//Fun Fact, Java supports labels. I didn't know Java liked Spaghetti
 		Running:
 		while(System.currentTimeMillis() < long_timeout){
-			request = new DatagramPacket(new byte[1024], 1024);
-			this.read(request);
-			
+			//If we can't listen then just loop around
+			if(!this.listen()){ continue Running; }
+				this.read();
 		}
 		//Cleanup
 		clientListener.close();
-		
 	}
+
 
 	/**
 	*Run the instance of Danger Control continously without a timeout, only a kill message passed or a kill command from the OS will shut down the instance
@@ -124,75 +116,72 @@ public class DangerControlUDP  extends DangerControl{
 	*/
 	public void run(boolean continous) throws Exception{
 		System.out.println("Running Server Continously");
-		DangerControlUDP.continous = continous;
-		while(DangerControlUDP.continous){
-			request = new DatagramPacket(new byte[1024], 1024);
-			System.out.println("Reading Packet");
-			this.read(request);
+		DangerControl.continous = continous;
+		Running:
+		while(DangerControl.continous){
+			System.out.println(DangerControl.continous);
+			if(!this.listen()){ continue Running; }
+				System.out.println("Reading Packet");
+				this.read();
 			
 		}
 		//Cleanup
 		clientListener.close();	
 		classifier.close();
+		
 	}
+
+	/**
+	*Opens the ServerSocket clientListener to accept incoming data
+	*@return Returns true if the socket is able to listen, false if otherwise.
+	*/
+	public boolean listen(){
+		try{
+			incoming = clientListener.accept();
+			return true;
+		}catch(IOException e){
+			return false;
+		}	
+	}
+
 
 	/**
 	*Readings incoming messages and calls the dispatcher to send responses
 	*/
-	public void read(DatagramPacket request) throws Exception{
+	public void read() throws Exception{
+		//Read incoming messages with autoflushing printwriter
+		BufferedReader info = new BufferedReader(new InputStreamReader(incoming.getInputStream()));
+		DataOutputStream responseStream = new DataOutputStream(incoming.getOutputStream());
+		String msg;
+
 		
-
-		// Block until the host receives a UDP packet.
-	    clientListener.receive(request);
-
-		// Obtain references to the packet's array of bytes.
-      	byte[] buf = request.getData();
-
-      	// Wrap the bytes in a byte array input stream,
-      	// so that you can read the data as a stream of bytes.
-      	ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-
-      	// Wrap the byte array output stream in an input stream reader,
-      	// so you can read the data as a stream of characters.
-      	InputStreamReader isr = new InputStreamReader(bais);
-
-      	// Wrap the input stream reader in a bufferred reader,
-      	// so you can read the character data a line at a time.
-      	// (A line is a sequence of chars terminated by any combination of \r and \n.) 
-      	BufferedReader incomingStream = new BufferedReader(isr);
-
-      	// The message data is contained in a single line, so read this line.
-      	String line;
-	
-		//Loop through incoming message from udp
-		
-		while((line = incomingStream.readLine()) != null){
-			System.out.println(line);
-			this.handleLine(line,request);	
+		while((msg = info.readLine()) != null){
+			System.out.println(msg);
+			handleLine(msg,responseStream);
+			//We can extend right here to implement more commands
 		}
-		
+		//Close the incoming stream
+		incoming.close();
+		info.close();
 	}
 
-	public void handleLine(String line,DatagramPacket request){
-			System.out.println(this.dangerZones);
+	
+	public void handleLine(String line,DataOutputStream request){
+		
 			//We should use some type of switch or something to figure out what function to call from the command parser
 			if(line.indexOf(CommandParser.CMD_LON) != -1 && line.indexOf(CommandParser.CMD_LAT) != -1){
 				//Handle the command and respond to it
 				try{ 
-					Stack<DangerNode> temp = this.handleGeoCommand(line.trim());
-					this.dispatchResponse(temp,request);
+					this.dispatchResponse(this.handleGeoCommand(line),request);
 				}catch(Exception e){
-					System.out.println("Error handling Geo Command: '"  + line + "' is not properly formed");
-					System.out.println("Exception: " + e.getMessage());
-					for(StackTraceElement element : e.getStackTrace()){
-						System.out.println("Trace: " + element.toString());
-					}
+					System.out.println("Error handling Geo Command: \"" + line + "\" is not properly formed");
+					System.out.println(e.getMessage());
 				}
 				//Force the stream to spit back to the client
 			}else if(line.trim().equals(CommandParser.KILL)){
 				//We've found the kill server command in the line, so seppuku.
 				System.out.println("Recieved Kill Code");
-				DangerControlUDP.continous = false;
+				DangerControl.continous = false;
 				long_timeout = 0;
 			}else if(line.indexOf(CommandParser.CMD_CLASSIFY)!=-1){
 				//Handle the classification
@@ -222,75 +211,65 @@ public class DangerControlUDP  extends DangerControl{
 					System.out.println("Unknown category");
 				}
 				this.dispatchTrainResponse(commited, request);;
+
 			}
 			//We can extend right here to implement more commands
 	}
 
+
 	/**
-	*Dispatches the training response to the client.
-	*@param committed Whether or not the training was sucessful
-	*@param request the packet to use to figure out addresses to send back to the user.
+	*Dispatches the training response to the client
+	*@param commited Whether or not the training was sucessful
+	*@param responseStream The stream used to send information back to the client.
 	*/
-	public void dispatchTrainResponse(boolean commited, DatagramPacket request){
+	public void dispatchTrainResponse(boolean commited, DataOutputStream responseStream){
 		JSONObject response = new JSONObject();
 		String responseString = commited ? "Yes" : "No";
 		response.put("Response", responseString);
-		InetAddress clientHost = request.getAddress();
-		int clientPort = request.getPort();
-		byte[] buf = (response.toString() + "\0").getBytes();
-	    DatagramPacket reply = new DatagramPacket(buf, buf.length, clientHost, clientPort);
-	    try{
-	    	clientListener.send(reply);
-	    }catch(IOException ioe){
-	    	System.out.println("Could not send the packet back to the client");
-	    	System.out.println("IOException: " +ioe.getMessage());
-	    }
-	}
 
+		try{ 
+			responseStream.writeBytes(response.toString()+"\0");
+			responseStream.flush();	
+		}catch(IOException ioe){
+			System.out.println("could not send response to client");
+			System.out.println("Exception: " + ioe.getMessage());
+		}
+	}
 
 	/**
 	*Dispatches the class response to the client.
 	*@param responseString the string to send back to the user.
-	*@param request the packet to use to figure out addresses to send back to the user.
+	*@param responseStream The stream used to send information back to the client.
 	*/
-	public void dispatchClassResponse(String responseString, DatagramPacket request){
+	public void dispatchClassResponse(String responseString, DataOutputStream responseStream){
 		JSONObject response = new JSONObject();
 		response.put("Response", responseString);
-		InetAddress clientHost = request.getAddress();
-		int clientPort = request.getPort();
-		byte[] buf = (response.toString() + "\0").getBytes();
-	    DatagramPacket reply = new DatagramPacket(buf, buf.length, clientHost, clientPort);
-	    try{ 
-	 	   clientListener.send(reply);
-		}catch (Exception e) {
+		try{		
+			responseStream.writeBytes(response.toString()+"\0");
+			responseStream.flush();	
+		}catch(IOException e){
 			System.out.println("could not send response to client");
 			System.out.println("Exception: " + e.getMessage());
 		}
 	}
-
 
 	/**
 	*Dispatches a response back to the client of the nearest neighbors to the point they asked for.
 	*@param neighbors The nearest zones returned by the search for the tree
 	*/
-	public void dispatchResponse(Stack<DangerNode> neighbors,DatagramPacket request){
+	public void dispatchResponse(Stack<DangerNode> neighbors,DataOutputStream responseStream){
 		//Lets send the response as a json array of the nodes
 		JSONObject response = new JSONObject();
 		response.put("neighbors", neighbors);
-		// Send reply.
-	    InetAddress clientHost = request.getAddress();
-	    int clientPort = request.getPort();
-	    byte[] buf = (response.toString() + "\0").getBytes();
-	    DatagramPacket reply = new DatagramPacket(buf, buf.length, clientHost, clientPort);
-	    try{ 
-	 	   clientListener.send(reply);
-		}catch (Exception e) {
+		//System.out.println(response);
+		try{
+			responseStream.writeBytes(response.toString()+"\0");
+			responseStream.flush();	
+		}catch(IOException e){
 			System.out.println("could not send response to client");
 			System.out.println("Exception: " + e.getMessage());
 		}
 	}
-
-	
 
 	/**
 	*Parses a command in the GEO COMMAND format, will return the results of searching the tree for the specified coordinate and number of near zones
@@ -305,7 +284,7 @@ public class DangerControlUDP  extends DangerControl{
 			//We have recieved the Coordinates and should play with the tree
 			//System.out.println("Searching tree for " + geoCmd[0] + " " + geoCmd[1]);
 			if(dangerZones == null){
-				System.out.println("Error: No Tree Initailized");
+				System.out.println("No Tree Initailized");
 				return null;
 			}
 			return dangerZones.nearestNeighbor(new float[]{geoCmd[0],geoCmd[1]},(int)geoCmd[2]);
@@ -316,10 +295,8 @@ public class DangerControlUDP  extends DangerControl{
 
 	public static void main(String argv[]) throws Exception
 	{
-		
-		DangerControlUDP control = new DangerControlUDP();		
+		DangerControlTCP control = new DangerControlTCP();		
 		control.run();
-
 
 	}
 
