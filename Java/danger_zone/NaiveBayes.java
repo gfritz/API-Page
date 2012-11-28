@@ -29,7 +29,7 @@ public class NaiveBayes{
 	/**
 	*Helper array to make the classifying function easier
 	*/
-	public static final int [] categories = {CAT_SAFE,CAT_DANGER};
+	public static  int [] categories = {CAT_SAFE,CAT_DANGER};
 
 	/**
 	*Holds The two categories of the data being classified, and number of times a given String appears
@@ -66,6 +66,11 @@ public class NaiveBayes{
 		HashMap<String,Integer> safe = new HashMap<String,Integer>();
 		category_count.put(CAT_DANGER, danger);
 		category_count.put(CAT_SAFE, safe);
+	}
+
+	public NaiveBayes(HashMap<Integer, HashMap<String,Integer>> catMaps, int [] categories){
+		categories = categories;
+		category_count = catMaps;
 	}
 
 	/**
